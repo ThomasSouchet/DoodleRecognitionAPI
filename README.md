@@ -16,7 +16,7 @@ Doodle Recognition API
 - sudo docker build --tag=doodle-recognition-api .
 - sudo docker images
 - sudo docker run -e PORT=8000 -p 8000:8000 doodle-recognition-api
-...
+- ...
 - sudo docker run -it -e PORT=8000 -p 8000:8000 doodle-recognition-api sh
 - sudo docker ps
 - sudo docker stop CONTAINER ID
