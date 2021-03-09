@@ -1,11 +1,11 @@
 # path of the file to upload to gcp (the path of the file should be absolute or should match the directory where the make command is run)
-LOCAL_PATH=PATH_TO_FILE_train_1k.csv
+LOCAL_PATH=
 
 # project id
-PROJECT_ID=XXX
+PROJECT_ID=doodlerecognition-307108
 
 # bucket name
-BUCKET_NAME=XXX
+BUCKET_NAME = 'wagon-ml-doodle-rec'
 
 # bucket directory in which to store the uploaded file (we choose to name this data as a convention)
 BUCKET_FOLDER=data
@@ -26,24 +26,6 @@ upload_data:
 	# -@gsutil cp train_1k.csv gs://wagon-ml-my-bucket-name/data/train_1k.csv
 	-@gsutil cp ${LOCAL_PATH} gs://${BUCKET_NAME}/${BUCKET_FOLDER}/${BUCKET_FILE_NAME}
 
-### GCP configuration - - - - - - - - - - - - - - - - - - -
-
-# /!\ you should fill these according to your account
-
-### GCP Project - - - - - - - - - - - - - - - - - - - - - -
-
-# not required here
-
-### GCP Storage - - - - - - - - - - - - - - - - - - - - - -
-
-# BUCKET_NAME=XXX
-
-##### Data  - - - - - - - - - - - - - - - - - - - - - - - -
-
-# not required here
-
-##### Training  - - - - - - - - - - - - - - - - - - - - - -
-
 # will store the packages uploaded to GCP for the training
 BUCKET_TRAINING_FOLDER = 'trainings'
 
@@ -63,12 +45,12 @@ RUNTIME_VERSION=1.15
 
 ##### Package params  - - - - - - - - - - - - - - - - - - -
 
-PACKAGE_NAME=TaxiFareModel
-FILENAME=trainer
+PACKAGE_NAME=DoodleRecognitionAPI
+FILENAME=
 
 ##### Job - - - - - - - - - - - - - - - - - - - - - - - - -
 
-JOB_NAME=taxi_fare_training_pipeline_$(shell date +'%Y%m%d_%H%M%S')
+JOB_NAME=doodle_recognition_training_pipeline_$(shell date +'%Y%m%d_%H%M%S')
 
 
 run_locally:
