@@ -21,6 +21,9 @@ Doodle Recognition API
 - sudo docker ps
 - sudo docker stop CONTAINER ID
 - sudo docker kill CONTAINER ID 
+- sudo docker rmi -f IMAGE ID
+- sudo docker image prune -af
+- sudo docker container prune -f
 
 # Gcloud commands to push and run docker container on GCP:
 - sudo gcloud auth login
