@@ -22,3 +22,8 @@ google-cloud-storage
 termcolor
 uvicorn
 fastapi
+Pillow
+matplotlib
+tensorflow
+tensorflow-addons
+python-multipart

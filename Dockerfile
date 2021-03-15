@@ -2,7 +2,7 @@ FROM python:3.8.6-buster
 
 COPY api /api
 COPY DoodleRecognitionAPI /DoodleRecognitionAPI
-COPY model.joblib /model.joblib
+COPY models /models
 COPY requirements.txt /requirements.txt
 COPY credentials.json /credentials.json
 
