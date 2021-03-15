@@ -1,5 +1,3 @@
-import os
-
 class  CacheModel:
     
     __instance = None
