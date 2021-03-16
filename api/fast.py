@@ -86,7 +86,10 @@ def predict(response : Response, modelName: str = Form(...), numClass: int = For
         classes = []    
         with open('./api/params.json', 'rb') as f:
             params = json.load(f)
-            classes = params['classes'][:numClass]
+            if numClass == 80:
+                classes = params['classes_80']
+            else:
+                classes = params['classes'][:numClass]
 
         predict = [int(pred*100) for pred in pred[0]]
 
@@ -113,7 +116,6 @@ def predict(response : Response, modelName: str = Form(...), numClass: int = For
         response.headers["Content-Type"] = "application/json"
         
     except Exception as e:
-        print(str(e))
         response.status_code = 500 
         response_prediction = {"prediction" : f"An unexpected error occured, please check \
                                 API's logs!  \n\n{str(e)}"}
