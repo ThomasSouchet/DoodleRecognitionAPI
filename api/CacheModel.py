@@ -1,7 +1,7 @@
 class  CacheModel:
     
     __instance = None
-    model = None
+    model = {}
     
     @staticmethod 
     def getInstance():
@@ -17,8 +17,8 @@ class  CacheModel:
         else:
             CacheModel.__instance = self
     
-    def getModel(self):
-        return self.model
+    def getModel(self, model_name):
+        return self.model[model_name]
     
-    def setModel(self, model):
-        self.model = model
+    def addModel(self, model_name, model):
+        self.model[model_name] = model

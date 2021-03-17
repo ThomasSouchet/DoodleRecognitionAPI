@@ -3,7 +3,7 @@ import json
 class  CacheClasses:
     
     __instance = None
-    classes = []
+    params = {}
     
     @staticmethod 
     def getInstance():
@@ -17,16 +17,24 @@ class  CacheClasses:
         if CacheClasses.__instance != None:
             raise Exception("This class is a singleton!")
         else:
-            classes = []
-            classes80 = []
             with open('./api/params.json', 'rb') as f:
-                params = json.load(f)
-                classes = params['classes'][:numClass]
-                classes80 = params['classes_80']
+                self.params = json.load(f)
             CacheClasses.__instance = self
     
-    def getClasses(self):
-        return self.classes
+    def getClasses(self, numClass):
+        return self.params['classes'][:numClass]
     
     def getClasses80(self):
-        return self.classes80
+        return self.params['classes_80']
+    
+    def getAnimalsClasses(self):
+        return self.params['classes_animals']
+    
+    def getFoodClasses(self):
+        return self.params['classes_food']
+
+    def getTransportClasses(self):
+        return self.params['classes_transport']
+
+    def getObjectClasses(self):
+        return self.params['classes_object']

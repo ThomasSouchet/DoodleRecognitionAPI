@@ -2,7 +2,7 @@
 import pandas as pd
 import numpy as np
 import joblib
-import os
+import os, sys, traceback
 import time
 import shutil
 import json
@@ -38,12 +38,13 @@ async def startup_event():
     '''
     On api startup, load and store models in mem  
     '''
-    # print("load model ...")
-    # dirname = os.path.dirname(os.path.dirname(__file__))
-    # model_path = os.path.join(dirname,'models','my_model1')
-    # model = load_model(model_path)
-    # CacheModel.getInstance().setModel(model)
-    # print("model is ready ...")
+    print("load models ...")
+    dirname = os.path.dirname(os.path.dirname(__file__))
+    model_path = os.path.join(dirname,'models')
+    for file_name in os.listdir(model_path):
+        model = load_model(os.path.join(model_path,file_name))
+        CacheModel.getInstance().addModel(file_name, model)
+    print("models are ready ...")
     
 
 @app.get("/")
@@ -51,7 +52,7 @@ def index():
     return {"Doodle Recognition API": "OK"}
 
 @app.post("/predict/")
-def predict(response : Response, modelName: str = Form(...), numClass: int = Form(...), inputImage : UploadFile = File(...)):
+def predict(response : Response, modelName: str = Form(...), numClass: str = Form(...), inputImage : UploadFile = File(...)):
 
     try:
         ''' 
@@ -68,11 +69,7 @@ def predict(response : Response, modelName: str = Form(...), numClass: int = For
         img = read_imagefile(temp_image)
 
         # prediction
-        #pred = CacheModel.getInstance().getModel().predict(img)
-        dirname = os.path.dirname(os.path.dirname(__file__))
-        model_path = os.path.join(dirname,'models',modelName)
-        model = load_model(model_path)
-        pred = model.predict(img)
+        pred = CacheModel.getInstance().getModel(modelName).predict(img)
 
         '''
         Delete temp image
@@ -84,12 +81,18 @@ def predict(response : Response, modelName: str = Form(...), numClass: int = For
         Build response
         '''    
         classes = []    
-        with open('./api/params.json', 'rb') as f:
-            params = json.load(f)
-            if numClass == 80:
-                classes = params['classes_80']
-            else:
-                classes = params['classes'][:numClass]
+        if numClass == '80':
+            classes = CacheClasses.getInstance().getClasses80()
+        elif numClass == 'animals':
+            classes = CacheClasses.getInstance().getAnimalsClasses()
+        elif numClass == 'food':
+            classes = CacheClasses.getInstance().getFoodClasses()
+        elif numClass == 'transport':
+            classes = CacheClasses.getInstance().getTransportClasses()
+        elif numClass == 'object':
+            classes = CacheClasses.getInstance().getObjectClasses()
+        else:
+            classes = CacheClasses.getInstance().getClasses(int(numClass))
 
         predict = [int(pred*100) for pred in pred[0]]
 
@@ -116,6 +119,8 @@ def predict(response : Response, modelName: str = Form(...), numClass: int = For
         response.headers["Content-Type"] = "application/json"
         
     except Exception as e:
+        print(traceback.print_tb(sys.exc_info()[2]))
+        
         response.status_code = 500 
         response_prediction = {"prediction" : f"An unexpected error occured, please check \
                                 API's logs!  \n\n{str(e)}"}
